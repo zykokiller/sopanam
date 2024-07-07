@@ -47,7 +47,7 @@ nav ul li a {
 }
 
 nav ul li a:hover, nav ul li a.active {
-    color: #ff5722; /* Change color on hover and active */
+    color: black; /* Change to black */
 }
 
 .hero {
@@ -64,36 +64,6 @@ nav ul li a:hover, nav ul li a.active {
     text-align: center; /* Center text */
     color: white;
     width: 80%;
-}
-
-.center-content {
-    text-align: center; /* Center text */
-}
-
-.center-content h2 {
-    font-size: 48px;
-    margin: 0;
-    font-weight: bold;
-}
-
-.center-content p {
-    font-size: 18px;
-    margin: 20px 0;
-}
-
-.learn-more-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ff5722;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.learn-more-btn:hover {
-    background-color: #e64a19;
 }
 
 footer {
