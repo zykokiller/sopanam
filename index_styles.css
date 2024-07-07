@@ -32,15 +32,13 @@ nav ul {
 
 nav ul li a {
     text-decoration: none;
-    color: black; /* New color for normal state */
+    color: #fff;
     font-weight: bold;
     padding: 5px 10px;
     transition: color 0.3s ease;
 }
-nav ul li a.active {
-    color: black; /* New color for active state */
-}
 
+nav ul li a.active,
 nav ul li a:hover {
     color: #ffcc00;
 }
