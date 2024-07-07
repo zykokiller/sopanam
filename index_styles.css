@@ -29,21 +29,22 @@ nav {
 }
 
 nav ul {
-    list-style-type: none;
-    margin: 0;
+    list-style: none;
     padding: 0;
-    text-align: center;
+    margin: 0;
+    display: flex;
+    justify-content: center;
 }
 
 nav ul li {
-    display: inline;
-    margin-right: 10px;
+    margin: 0 10px;
 }
 
 nav ul li a {
     color: #fff;
     text-decoration: none;
-    padding: 5px 10px;
+    padding: 10px 15px;
+    display: block;
 }
 
 nav ul li a:hover {
@@ -52,23 +53,51 @@ nav ul li a:hover {
 
 .hero {
     position: relative;
-    background-image: url('path_to_your_background_image/melody-music-school-moto-cms-3-template_73837-2-original.webp');
-    background-size: cover;
-    background-position: center;
-    height: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.hero-text {
-    color: #fff;
     text-align: center;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 20px;
+    color: white;
 }
 
-.hero-text h1 {
-    font-size: 50px;
-    margin: 0;
+.hero .hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.carousel-images {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-images img {
+    width: 100%;
+    height: auto;
+    min-width: 100%;
+}
+
+@keyframes slide {
+    0% { transform: translateX(0); }
+    8.33% { transform: translateX(0); }
+    16.66% { transform: translateX(-100%); }
+    25% { transform: translateX(-100%); }
+    33.33% { transform: translateX(-200%); }
+    41.66% { transform: translateX(-200%); }
+    50% { transform: translateX(-300%); }
+    58.33% { transform: translateX(-300%); }
+    66.66% { transform: translateX(-400%); }
+    75% { transform: translateX(-400%); }
+    83.33% { transform: translateX(-500%); }
+    91.66% { transform: translateX(-500%); }
+    100% { transform: translateX(0); }
+}
+
+.carousel-images {
+    animation: slide 24s infinite;
 }
