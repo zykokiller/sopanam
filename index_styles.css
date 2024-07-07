@@ -1,62 +1,58 @@
-/* index_styles.css */
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
-header {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    z-index: 10;
-    background-color: transparent;
+    margin: 0;
+    padding: 0;
 }
 
 .header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    background-color: #333;
+    padding: 10px;
 }
 
 .logo img {
-    height: 70px; /* Increased logo size */
+    height: 50px;
 }
 
 nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
+    list-style-type: none;
     margin: 0;
     padding: 0;
-}
-
-nav ul li {
-    display: inline;
+    display: flex;
+    gap: 15px;
 }
 
 nav ul li a {
     text-decoration: none;
-    color: white; /* Change to white */
-    font-weight: bold;
-    padding: 5px 10px;
-    transition: color 0.3s ease;
+    color: white;
+    padding: 8px 16px;
+    display: block;
 }
 
-nav ul li a:hover, nav ul li a.active {
-    color: #ffcc00; /* Change hover and active color to #ffcc00 */
+nav ul li a:hover,
+nav ul li a.active {
+    background-color: #575757;
+}
+
+.menu-toggle {
+    display: none;
+    background-color: #333;
+    color: white;
+    border: none;
+    font-size: 24px;
 }
 
 .hero {
     position: relative;
-    height: 100vh;
-    background: url('index_banner.jpg') no-repeat center center/cover;
-    overflow-x: hidden;
+    text-align: center;
+    color: white;
+}
+
+.banner {
+    width: 100%;
+    height: auto;
 }
 
 .hero-content {
@@ -64,169 +60,29 @@ nav ul li a:hover, nav ul li a.active {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    text-align: center; /* Center text */
-    color: white;
-    width: 80%;
 }
 
-footer {
+.footer-content {
     background-color: #333;
     color: white;
     text-align: center;
     padding: 20px 0;
 }
 
-.footer-content {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+.social-media img {
+    width: 30px;
+    margin: 0 10px;
 }
 
-.footer-content .social-media a img {
-    height: 24px;
-    transition: opacity 0.3s ease;
-    background-color: transparent; /* Remove background color */
-}
-
-.footer-content .social-media a:hover img {
-    opacity: 0.7;
-}
-
-.menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    padding: 5px 10px;
-    transition: color 0.3s ease;
-}
-
-@media (max-width: 1024px) {
-    .header-container {
-        flex-direction: column;
-        align-items: flex-end;
-    }
-
-    .nav ul {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        width: auto;
-    }
-
-    .hero-content {
-        width: 90%;
-        text-align: center;
-    }
-
-    .logo img {
-        height: 50px; /* Decrease logo size on smaller screens */
-    }
-
+@media screen and (max-width: 600px) {
     nav ul {
         flex-direction: column;
-        align-items: flex-end;
-        gap: 10px;
         display: none;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        position: absolute;
-        top: 60px;
-        right: 0;
-        padding: 20px 0;
     }
-
     nav ul.show-menu {
         display: flex;
     }
-
-    nav ul li {
-        width: 100%;
-    }
-
-    nav ul li a {
-        padding: 10px 20px;
-        width: 100%;
-        text-align: left;
-    }
-
     .menu-toggle {
         display: block;
-    }
-
-    .hero {
-        background-position: center;
-    }
-}
-
-@media (max-width: 768px) {
-    .header-container {
-        flex-direction: column;
-        align-items: flex-end;
-    }
-
-    .hero-content {
-        width: 90%;
-        text-align: center;
-    }
-
-    .logo img {
-        height: 50px; /* Decrease logo size on smaller screens */
-    }
-
-    nav ul {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 10px;
-        display: none;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        position: absolute;
-        top: 60px;
-        right: 0;
-        padding: 20px 0;
-    }
-
-    nav ul.show-menu {
-        display: flex;
-    }
-
-    nav ul li {
-        width: 100%;
-    }
-
-    nav ul li a {
-        padding: 10px 20px;
-        width: 100%;
-        text-align: left;
-    }
-
-    .menu-toggle {
-        display: block;
-    }
-
-    .hero {
-        background-position: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-content {
-        width: 95%;
-        text-align: center;
-    }
-
-    .logo img {
-        height: 40px; /* Decrease logo size on smaller screens */
-    }
-
-    nav ul {
-        gap: 5px;
-    }
-
-    nav ul li a {
-        padding: 10px 20px;
     }
 }
