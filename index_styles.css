@@ -65,13 +65,15 @@ nav ul li a:hover {
 .right-content h2 {
     font-size: 3em;
     margin-bottom: 20px;
-    color: #fff;
+    color: #000;
+    font-weight: bold;
+    line-height: 1.2;
 }
 
 .right-content p {
     font-size: 1.2em;
     margin-bottom: 20px;
-    color: #fff;
+    color: #000;
 }
 
 .learn-more-btn {
