@@ -2,6 +2,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 header {
@@ -131,6 +132,10 @@ footer {
 
     nav ul.show-menu {
         display: flex;
+    }
+
+    nav ul li {
+        width: 100%;
     }
 
     nav ul li a {
