@@ -17,6 +17,7 @@ body {
     justify-content: space-between;
     align-items: center;
     z-index: 10;
+    background: transparent;
 }
 
 .logo img {
@@ -48,19 +49,17 @@ nav ul li a:hover {
     background: url('index_banner.jpg') no-repeat center center/cover;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    padding-right: 50px;
 }
 
 .hero-content {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    text-align: left;
     color: #fff;
 }
 
 .right-content {
     max-width: 600px;
+    text-align: right;
 }
 
 .right-content h2 {
