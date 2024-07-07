@@ -3,46 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Sopanam Music School</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        #mainMenu {
-            background-color: #333;
-            padding: 10px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        #mainMenu img {
-            height: 50px;
-        }
-        #mainMenu nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-        #mainMenu nav ul li {
-            display: inline;
-            margin-right: 10px;
-        }
-        #mainMenu nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            padding: 5px 10px;
-        }
-        #mainMenu nav ul li a:hover {
-            background-color: #555;
-        }
-    </style>
+    <title>Sopanam Music School</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="mainMenu">
-        <img src="sopanam%20logo.png" alt="Sopanam Music School Logo">
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <img src="path_to_your_logo/sopanam%20logo.png" alt="Sopanam Music School Logo">
+            </div>
+            <div class="contact-info">
+                <p>(123) 456-7890</p>
+                <p>(123) 456-7891</p>
+                <p>2130 Fulton Street, San Diego, CA 94117-1080</p>
+            </div>
+        </div>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
@@ -52,7 +27,13 @@
                 <li><a href="pending_fees.html">Pending Fees</a></li>
             </ul>
         </nav>
-    </div>
-    <h1>Welcome to Sopanam Music School</h1>
+    </header>
+    <main>
+        <div class="hero">
+            <div class="hero-text">
+                <h1>Music for Everyone</h1>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
