@@ -40,6 +40,7 @@
                     <li><a href="pending_fees.html">Pending Fees</a></li>
                 </ul>
             </nav>
+            <button class="menu-toggle">☰</button>
         </div>
     </header>
     <main>
@@ -58,5 +59,11 @@
             </div>
         </div>
     </footer>
+    <script>
+        // Toggle the menu on small screens
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('nav ul').classList.toggle('show-menu');
+        });
+    </script>
 </body>
 </html>
