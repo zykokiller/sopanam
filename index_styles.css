@@ -56,15 +56,6 @@ nav ul li a:hover, nav ul li a.active {
     background: url('banner-image.jpg') no-repeat center center/cover;
 }
 
-.hero-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center; /* Center text */
-    color: white;
-    width: 80%;
-}
 
 footer {
     background-color: #333;
