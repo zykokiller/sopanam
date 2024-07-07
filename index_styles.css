@@ -23,7 +23,7 @@ header {
 }
 
 .logo img {
-    height: 50px;
+    height: 70px; /* Increased logo size */
 }
 
 nav ul {
@@ -40,14 +40,14 @@ nav ul li {
 
 nav ul li a {
     text-decoration: none;
-    color: black; /* Change to black */
+    color: white; /* Change to white */
     font-weight: bold;
     padding: 5px 10px;
     transition: color 0.3s ease;
 }
 
 nav ul li a:hover, nav ul li a.active {
-    color: black; /* Change to black */
+    color: #ffcc00; /* Change hover and active color to #ffcc00 */
 }
 
 .hero {
@@ -82,6 +82,7 @@ footer {
 .footer-content .social-media a img {
     height: 24px;
     transition: opacity 0.3s ease;
+    background-color: transparent; /* Remove background color */
 }
 
 .footer-content .social-media a:hover img {
