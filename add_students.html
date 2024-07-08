@@ -130,19 +130,28 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
 
         const firebaseConfig = {
-             apiKey: "AIzaSyBTdroN3i8PB8u8GeMDm_djZaw_lisgJ4M",
+            apiKey: "AIzaSyBTdroN3i8PB8u8GeMDm_djZaw_lisgJ4M",
     authDomain: "sopanam-fees-site.firebaseapp.com",
     projectId: "sopanam-fees-site",
     storageBucket: "sopanam-fees-site.appspot.com",
     messagingSenderId: "875694835618",
     appId: "1:875694835618:web:f28cddc9758eddd40914fb",
     measurementId: "G-JMR44EQ6M8"
-  };
+        };
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const storage = getStorage(app);
+        const auth = getAuth(app);
+
+        // Sign in anonymously
+        signInAnonymously(auth).catch((error) => {
+            console.error('Authentication error:', error);
+            alert('Authentication error. Please try again.');
+        });
 
         const addStudentForm = document.getElementById('addStudentForm');
         addStudentForm.addEventListener('submit', async (event) => {
