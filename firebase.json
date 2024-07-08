@@ -1,25 +1,25 @@
 {
   "hosting": {
     "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
+    "headers": [
+      {
+        "source": "/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          },
+          {
+            "key": "Content-Security-Policy",
+            "value": "default-src 'self'"
+          }
+        ]
+      }
     ],
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
-  "storage": {
-    "rules": "storage.rules",
-    "cors": [
-      {
-        "origin": ["*"],
-        "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "maxAgeSeconds": 3600
+        "function": "app"
       }
     ]
   }
