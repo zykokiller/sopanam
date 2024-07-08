@@ -151,6 +151,7 @@
 
         document.getElementById('addStudentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            console.log('Form submitted');
 
             const studentName = document.getElementById('studentName').value;
             const address = document.getElementById('address').value;
@@ -172,17 +173,19 @@
                             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                             document.getElementById('uploadProgress').style.display = 'block';
                             document.getElementById('uploadProgress').textContent = 'Uploading: ' + progress.toFixed(2) + '%';
+                            console.log('Upload progress:', progress + '%');
                         }, 
                         (error) => {
-                            console.error('Error uploading photo: ', error);
+                            console.error('Error uploading photo:', error);
                         }, 
                         async () => {
                             photoURL = await getDownloadURL(uploadTask.snapshot.ref);
+                            console.log('Photo uploaded, URL:', photoURL);
                             await addStudentToFirestore(photoURL);
                         }
                     );
                 } catch (error) {
-                    console.error('Error during upload process: ', error);
+                    console.error('Error during upload process:', error);
                 }
             } else {
                 await addStudentToFirestore(photoURL);
@@ -215,12 +218,13 @@
                 };
 
                 await addDoc(collection(db, 'students'), newStudent);
+                console.log('Student added to Firestore:', newStudent);
                 alert('Student added successfully!');
                 document.getElementById('uploadProgress').textContent = 'Upload finished!';
                 document.getElementById('addStudentForm').reset();
                 document.getElementById('uploadProgress').style.display = 'none';
             } catch (error) {
-                console.error('Error adding student to Firestore: ', error);
+                console.error('Error adding student to Firestore:', error);
             }
         }
     </script>
