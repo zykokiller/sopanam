@@ -162,30 +162,27 @@
             const studentPhoto = document.getElementById('studentPhoto').files[0];
 
             let photoURL = '';
-            if (studentPhoto) {
-                try {
-                    const storageRef = ref(storage, 'students/' + studentPhoto.name);
-                    const uploadTask = uploadBytesResumable(storageRef, studentPhoto);
 
-                    uploadTask.on('state_changed', 
-                        (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            document.getElementById('uploadProgress').style.display = 'block';
-                            document.getElementById('uploadProgress').textContent = 'Uploading: ' + progress.toFixed(2) + '%';
-                        }, 
-                        (error) => {
-                            console.error('Error uploading photo: ', error);
-                        }, 
-                        async () => {
-                            photoURL = await getDownloadURL(uploadTask.snapshot.ref);
-                            await addStudentToFirestore(photoURL);
-                        }
-                    );
-                } catch (error) {
-                    console.error('Error during upload process: ', error);
-                }
+            if (studentPhoto) {
+                document.getElementById('uploadProgress').style.display = 'block';
+                const storageRef = ref(storage, 'students/' + studentPhoto.name);
+                const uploadTask = uploadBytesResumable(storageRef, studentPhoto);
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        document.getElementById('uploadProgress').textContent = 'Uploading: ' + progress.toFixed(2) + '%';
+                    },
+                    (error) => {
+                        console.error('Error uploading photo: ', error);
+                    },
+                    async () => {
+                        photoURL = await getDownloadURL(uploadTask.snapshot.ref);
+                        addStudentToFirestore(photoURL);
+                    }
+                );
             } else {
-                await addStudentToFirestore(photoURL);
+                addStudentToFirestore(photoURL);
             }
         });
 
