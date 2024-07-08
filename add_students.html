@@ -147,11 +147,13 @@
         const storage = getStorage(app);
         const auth = getAuth(app);
 
-        // Sign in anonymously
-        signInAnonymously(auth).catch((error) => {
-            console.error('Authentication error:', error);
-            alert('Authentication error. Please try again.');
-        });
+        signInAnonymously(auth)
+            .then(() => {
+                console.log('Signed in anonymously');
+            })
+            .catch((error) => {
+                console.error('Error signing in anonymously:', error);
+            });
 
         const addStudentForm = document.getElementById('addStudentForm');
         addStudentForm.addEventListener('submit', async (event) => {
@@ -171,23 +173,27 @@
                 const photoRef = ref(storage, `students/${photo.name}`);
                 const uploadTask = uploadBytesResumable(photoRef, photo);
 
-                uploadTask.on('state_changed', (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    document.getElementById('uploadProgress').style.display = 'block';
-                    document.getElementById('uploadPercentage').innerText = progress.toFixed(0) + '%';
-                }, (error) => {
-                    console.error('Upload failed:', error);
-                    alert('Upload failed. Please try again.');
-                }, async () => {
-                    photoURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    addStudentToFirestore(studentName, address, batchTime, admissionDate, whatsappNumber, phoneNumber, course, photoURL);
-                });
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        document.getElementById('uploadProgress').style.display = 'block';
+                        document.getElementById('uploadPercentage').innerText = progress.toFixed(0) + '%';
+                    }, 
+                    (error) => {
+                        console.error('Upload failed:', error);
+                        alert('Error uploading photo. Please try again.');
+                    }, 
+                    async () => {
+                        photoURL = await getDownloadURL(uploadTask.snapshot.ref);
+                        await saveStudentData(studentName, address, batchTime, admissionDate, whatsappNumber, phoneNumber, course, photoURL);
+                    }
+                );
             } else {
-                addStudentToFirestore(studentName, address, batchTime, admissionDate, whatsappNumber, phoneNumber, course, photoURL);
+                await saveStudentData(studentName, address, batchTime, admissionDate, whatsappNumber, phoneNumber, course, photoURL);
             }
         });
 
-        async function addStudentToFirestore(studentName, address, batchTime, admissionDate, whatsappNumber, phoneNumber, course, photoURL) {
+        async function saveStudentData(studentName, address, batchTime, admissionDate, whatsappNumber, phoneNumber, course, photoURL) {
             try {
                 await addDoc(collection(db, 'students'), {
                     studentName,
