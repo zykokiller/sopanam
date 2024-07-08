@@ -178,14 +178,14 @@
                         }, 
                         async () => {
                             photoURL = await getDownloadURL(uploadTask.snapshot.ref);
-                            addStudentToFirestore(photoURL);
+                            await addStudentToFirestore(photoURL);
                         }
                     );
                 } catch (error) {
                     console.error('Error during upload process: ', error);
                 }
             } else {
-                addStudentToFirestore(photoURL);
+                await addStudentToFirestore(photoURL);
             }
         });
 
