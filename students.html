@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Students - Sopanam Music School</title>
+    <title>Students - Sopanam Music School</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,45 +32,40 @@
         #mainMenu nav ul li a:hover {
             background-color: #555;
         }
-        form {
-            margin-top: 20px;
-            width: 50%;
-            margin: 20px auto;
-        }
-        form div {
-            margin-bottom: 10px;
-        }
-        label {
-            display: inline-block;
-            width: 150px;
-        }
-        input[type="text"],
-        input[type="date"],
-        select,
-        input[type="file"] {
-            width: calc(100% - 160px);
-            padding: 5px;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        button:hover {
-            background-color: #555;
-        }
-        #uploadProgress {
-            width: 100%;
-            background-color: #f3f3f3;
-            margin-top: 10px;
-            padding: 5px;
+        h1 {
             text-align: center;
-            display: none;
+            margin: 20px 0;
+        }
+        .table-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        table {
+            width: 80%;
+            margin: 20px 20px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .delete-button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #c9302c;
         }
     </style>
 </head>
@@ -86,52 +81,52 @@
             </ul>
         </nav>
     </div>
-    <h1>Add Students - Sopanam Music School</h1>
-    <form id="addStudentForm">
+    <h1>Students - Sopanam Music School</h1>
+    <div class="table-container">
         <div>
-            <label for="studentName">Student Name:</label>
-            <input type="text" id="studentName" name="studentName" required>
+            <h2>Veena Students</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Address</th>
+                        <th>Batch Time</th>
+                        <th>Date of Admission</th>
+                        <th>WhatsApp Number</th>
+                        <th>Phone Number</th>
+                        <th>Photo</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="veenaStudentsTableBody">
+                </tbody>
+            </table>
         </div>
         <div>
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address" required>
+            <h2>Music Students</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Address</th>
+                        <th>Batch Time</th>
+                        <th>Date of Admission</th>
+                        <th>WhatsApp Number</th>
+                        <th>Phone Number</th>
+                        <th>Photo</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="musicStudentsTableBody">
+                </tbody>
+            </table>
         </div>
-        <div>
-            <label for="batchTime">Batch Time:</label>
-            <input type="text" id="batchTime" name="batchTime" required>
-        </div>
-        <div>
-            <label for="admissionDate">Date of Admission:</label>
-            <input type="date" id="admissionDate" name="admissionDate" required>
-        </div>
-        <div>
-            <label for="whatsappNumber">WhatsApp Number:</label>
-            <input type="text" id="whatsappNumber" name="whatsappNumber" required>
-        </div>
-        <div>
-            <label for="phoneNumber">Phone Number:</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" required>
-        </div>
-        <div>
-            <label for="course">Course:</label>
-            <select id="course" name="course" required>
-                <option value="Veena">Veena</option>
-                <option value="Music">Music</option>
-            </select>
-        </div>
-        <div>
-            <label for="studentPhoto">Student Photo (optional):</label>
-            <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*">
-        </div>
-        <div id="uploadProgress">Uploading: 0%</div>
-        <button type="submit">Add Student</button>
-    </form>
+    </div>
 
     <script type="module">
         // Import Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
+        import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -147,86 +142,47 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
-        document.getElementById('addStudentForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            console.log('Form submitted');
+        async function loadStudents() {
+            const querySnapshot = await getDocs(collection(db, 'students'));
+            const veenaStudentsTableBody = document.getElementById('veenaStudentsTableBody');
+            const musicStudentsTableBody = document.getElementById('musicStudentsTableBody');
 
-            const studentName = document.getElementById('studentName').value;
-            const address = document.getElementById('address').value;
-            const batchTime = document.getElementById('batchTime').value;
-            const admissionDate = document.getElementById('admissionDate').value;
-            const whatsappNumber = document.getElementById('whatsappNumber').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            const course = document.getElementById('course').value;
-            const studentPhoto = document.getElementById('studentPhoto').files[0];
-
-            let photoURL = '';
-            if (studentPhoto) {
-                try {
-                    const storageRef = ref(storage, 'students/' + studentPhoto.name);
-                    const uploadTask = uploadBytesResumable(storageRef, studentPhoto);
-
-                    uploadTask.on('state_changed', 
-                        (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            document.getElementById('uploadProgress').style.display = 'block';
-                            document.getElementById('uploadProgress').textContent = 'Uploading: ' + progress.toFixed(2) + '%';
-                            console.log('Upload progress:', progress + '%');
-                        }, 
-                        (error) => {
-                            console.error('Error uploading photo:', error);
-                        }, 
-                        async () => {
-                            photoURL = await getDownloadURL(uploadTask.snapshot.ref);
-                            console.log('Photo uploaded, URL:', photoURL);
-                            await addStudentToFirestore(photoURL);
-                        }
-                    );
-                } catch (error) {
-                    console.error('Error during upload process:', error);
+            querySnapshot.forEach((doc) => {
+                const student = doc.data();
+                const row = document.createElement('tr');
+                const photoCell = student.photoURL ? `<img src="${student.photoURL}" alt="Student Photo" width="50">` : 'No Photo';
+                row.innerHTML = `
+                    <td>${student.studentName}</td>
+                    <td>${student.address}</td>
+                    <td>${student.batchTime}</td>
+                    <td>${student.admissionDate}</td>
+                    <td>${student.whatsappNumber}</td>
+                    <td>${student.phoneNumber}</td>
+                    <td>${photoCell}</td>
+                    <td><button class="delete-button" data-doc-id="${doc.id}">Delete</button></td>
+                `;
+                if (student.course === 'Veena') {
+                    veenaStudentsTableBody.appendChild(row);
+                } else if (student.course === 'Music') {
+                    musicStudentsTableBody.appendChild(row);
                 }
-            } else {
-                await addStudentToFirestore(photoURL);
-            }
-        });
+            });
 
-        async function addStudentToFirestore(photoURL) {
-            try {
-                const newStudent = {
-                    studentName: document.getElementById('studentName').value,
-                    address: document.getElementById('address').value,
-                    batchTime: document.getElementById('batchTime').value,
-                    admissionDate: document.getElementById('admissionDate').value,
-                    whatsappNumber: document.getElementById('whatsappNumber').value,
-                    phoneNumber: document.getElementById('phoneNumber').value,
-                    course: document.getElementById('course').value,
-                    photoURL,
-                    paid_month1: false,
-                    paid_month2: false,
-                    paid_month3: false,
-                    paid_month4: false,
-                    paid_month5: false,
-                    paid_month6: false,
-                    paid_month7: false,
-                    paid_month8: false,
-                    paid_month9: false,
-                    paid_month10: false,
-                    paid_month11: false,
-                    paid_month12: false
-                };
-
-                await addDoc(collection(db, 'students'), newStudent);
-                console.log('Student added to Firestore:', newStudent);
-                alert('Student added successfully!');
-                document.getElementById('uploadProgress').textContent = 'Upload finished!';
-                document.getElementById('addStudentForm').reset();
-                document.getElementById('uploadProgress').style.display = 'none';
-            } catch (error) {
-                console.error('Error adding student to Firestore:', error);
-            }
+            // Add event listener for delete buttons
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', deleteStudent);
+            });
         }
+
+        async function deleteStudent(event) {
+            const docId = event.target.getAttribute('data-doc-id');
+            await deleteDoc(doc(db, 'students', docId));
+            alert('Student deleted successfully!');
+            location.reload(); // Reload the page to reflect the changes
+        }
+
+        window.onload = loadStudents;
     </script>
 </body>
 </html>
