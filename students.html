@@ -36,8 +36,12 @@
             text-align: center;
             margin: 20px 0;
         }
+        h2 {
+            text-align: center;
+            margin: 20px 0;
+        }
         table {
-            width: 80%;
+            width: 90%;
             margin: 20px auto;
             border-collapse: collapse;
         }
@@ -76,9 +80,12 @@
         </nav>
     </div>
     <h1>Students - Sopanam Music School</h1>
-    <table>
+
+    <h2>Veena Students</h2>
+    <table id="veenaTable">
         <thead>
             <tr>
+                <th>Student Photo</th>
                 <th>Student Name</th>
                 <th>Address</th>
                 <th>Batch Time</th>
@@ -88,7 +95,25 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody id="studentsTableBody">
+        <tbody id="veenaTableBody">
+        </tbody>
+    </table>
+
+    <h2>Music Students</h2>
+    <table id="musicTable">
+        <thead>
+            <tr>
+                <th>Student Photo</th>
+                <th>Student Name</th>
+                <th>Address</th>
+                <th>Batch Time</th>
+                <th>Date of Admission</th>
+                <th>WhatsApp Number</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="musicTableBody">
         </tbody>
     </table>
 
@@ -114,11 +139,15 @@
 
         async function loadStudents() {
             const querySnapshot = await getDocs(collection(db, 'students'));
-            const studentsTableBody = document.getElementById('studentsTableBody');
+            const veenaTableBody = document.getElementById('veenaTableBody');
+            const musicTableBody = document.getElementById('musicTableBody');
+            veenaTableBody.innerHTML = ''; // Clear the table body before loading
+            musicTableBody.innerHTML = ''; // Clear the table body before loading
             querySnapshot.forEach((doc) => {
                 const student = doc.data();
                 const row = document.createElement('tr');
                 row.innerHTML = `
+                    <td><img src="${student.photoURL}" alt="Student Photo" width="50" height="50"></td>
                     <td>${student.studentName}</td>
                     <td>${student.address}</td>
                     <td>${student.batchTime}</td>
@@ -127,7 +156,11 @@
                     <td>${student.phoneNumber}</td>
                     <td><button class="delete-button" data-doc-id="${doc.id}">Delete</button></td>
                 `;
-                studentsTableBody.appendChild(row);
+                if (student.course === 'Veena') {
+                    veenaTableBody.appendChild(row);
+                } else if (student.course === 'Music') {
+                    musicTableBody.appendChild(row);
+                }
             });
 
             // Add event listener for delete buttons
