@@ -3,31 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - Sopanam Music School</title>
+    <link rel="stylesheet" href="index_styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+    <!-- Firebase Authentication SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+         apiKey: "AIzaSyBTdroN3i8PB8u8GeMDm_djZaw_lisgJ4M",
+         authDomain: "sopanam-fees-site.firebaseapp.com",
+         projectId: "sopanam-fees-site",
+         storageBucket: "sopanam-fees-site.appspot.com",
+         messagingSenderId: "875694835618",
+         appId: "1:875694835618:web:f28cddc9758eddd40914fb",
+         measurementId: "G-JMR44EQ6M8"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
 </head>
 <body>
-    <form id="login-form">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
-
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="sopanam_logo.png" alt="Sopanam Music School Logo">
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="login-container">
+            <form id="login-form">
+                <h2>Login</h2>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </main>
     <script>
-        // Your web app's Firebase configuration
-        var firebaseConfig = {
-            apiKey: "AIzaSyBTdroN3i8PB8u8GeMDm_djZaw_lisgJ4M",
-    authDomain: "sopanam-fees-site.firebaseapp.com",
-    projectId: "sopanam-fees-site",
-    storageBucket: "sopanam-fees-site.appspot.com",
-    messagingSenderId: "875694835618",
-    appId: "1:875694835618:web:f28cddc9758eddd40914fb",
-    measurementId: "G-JMR44EQ6M8"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-
         // Firebase Authentication
         const auth = firebase.auth();
         const loginForm = document.getElementById('login-form');
