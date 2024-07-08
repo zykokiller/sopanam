@@ -45,8 +45,12 @@
             width: 150px;
         }
         input[type="text"],
-        input[type="date"] {
+        input[type="date"],
+        select {
             width: calc(100% - 160px);
+            padding: 5px;
+        }
+        input[type="file"] {
             padding: 5px;
         }
         button {
@@ -102,6 +106,17 @@
             <label for="phoneNumber">Phone Number:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" required>
         </div>
+        <div>
+            <label for="photo">Student Photo:</label>
+            <input type="file" id="photo" name="photo" accept="image/*" required>
+        </div>
+        <div>
+            <label for="course">Course:</label>
+            <select id="course" name="course" required>
+                <option value="Veena">Veena</option>
+                <option value="Music">Music</option>
+            </select>
+        </div>
         <button type="submit">Add Student</button>
     </form>
 
@@ -109,6 +124,7 @@
         // Import Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -124,10 +140,16 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
         document.getElementById('addStudentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             try {
+                const photoFile = document.getElementById('photo').files[0];
+                const photoRef = ref(storage, 'studentPhotos/' + photoFile.name);
+                await uploadBytes(photoRef, photoFile);
+                const photoURL = await getDownloadURL(photoRef);
+
                 const newStudent = {
                     studentName: document.getElementById('studentName').value,
                     address: document.getElementById('address').value,
@@ -135,6 +157,8 @@
                     admissionDate: document.getElementById('admissionDate').value,
                     whatsappNumber: document.getElementById('whatsappNumber').value,
                     phoneNumber: document.getElementById('phoneNumber').value,
+                    photoURL: photoURL,
+                    course: document.getElementById('course').value,
                     paid_month1: false,
                     paid_month2: false,
                     paid_month3: false,
