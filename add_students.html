@@ -157,10 +157,12 @@
             if (studentPhoto) {
                 try {
                     const storageRef = ref(storage, 'students/' + studentPhoto.name);
+                    console.log('Uploading photo...');
                     await uploadBytes(storageRef, studentPhoto);
                     photoURL = await getDownloadURL(storageRef);
+                    console.log('Photo uploaded. URL:', photoURL);
                 } catch (error) {
-                    console.error('Error uploading photo: ', error);
+                    console.error('Error uploading photo:', error);
                 }
             }
 
@@ -188,11 +190,13 @@
                     paid_month12: false
                 };
 
+                console.log('Adding student to Firestore...');
                 await addDoc(collection(db, 'students'), newStudent);
+                console.log('Student added successfully!');
                 alert('Student added successfully!');
                 document.getElementById('addStudentForm').reset();
             } catch (error) {
-                console.error('Error adding student to Firestore: ', error);
+                console.error('Error adding student to Firestore:', error);
             }
         });
     </script>
