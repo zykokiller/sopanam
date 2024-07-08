@@ -64,6 +64,14 @@
         button:hover {
             background-color: #555;
         }
+        #uploadProgress {
+            width: 100%;
+            background-color: #f3f3f3;
+            margin-top: 10px;
+            padding: 5px;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -115,6 +123,7 @@
             <label for="studentPhoto">Student Photo (optional):</label>
             <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*">
         </div>
+        <div id="uploadProgress">Uploading: 0%</div>
         <button type="submit">Add Student</button>
     </form>
 
@@ -122,7 +131,7 @@
         // Import Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -155,18 +164,39 @@
             let photoURL = '';
             if (studentPhoto) {
                 const storageRef = ref(storage, 'students/' + studentPhoto.name);
-                await uploadBytes(storageRef, studentPhoto);
-                photoURL = await getDownloadURL(storageRef);
-            }
+                const uploadTask = uploadBytesResumable(storageRef, studentPhoto);
 
+                // Monitor the progress of the upload
+                uploadTask.on('state_changed', 
+                    (snapshot) => {
+                        // Get the progress percentage
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        document.getElementById('uploadProgress').style.display = 'block';
+                        document.getElementById('uploadProgress').textContent = 'Uploading: ' + progress.toFixed(2) + '%';
+                    }, 
+                    (error) => {
+                        console.error('Error uploading photo: ', error);
+                    }, 
+                    async () => {
+                        // Upload completed successfully, get the download URL
+                        photoURL = await getDownloadURL(uploadTask.snapshot.ref);
+                        addStudentToFirestore(photoURL);
+                    }
+                );
+            } else {
+                addStudentToFirestore(photoURL);
+            }
+        });
+
+        async function addStudentToFirestore(photoURL) {
             const newStudent = {
-                studentName,
-                address,
-                batchTime,
-                admissionDate,
-                whatsappNumber,
-                phoneNumber,
-                course,
+                studentName: document.getElementById('studentName').value,
+                address: document.getElementById('address').value,
+                batchTime: document.getElementById('batchTime').value,
+                admissionDate: document.getElementById('admissionDate').value,
+                whatsappNumber: document.getElementById('whatsappNumber').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                course: document.getElementById('course').value,
                 photoURL,
                 paid_month1: false,
                 paid_month2: false,
@@ -185,11 +215,12 @@
             try {
                 await addDoc(collection(db, 'students'), newStudent);
                 alert('Student added successfully!');
-                this.reset();
+                document.getElementById('uploadProgress').textContent = 'Upload finished!';
+                document.getElementById('addStudentForm').reset();
             } catch (error) {
                 console.error('Error adding student: ', error);
             }
-        });
+        }
     </script>
 </body>
 </html>
