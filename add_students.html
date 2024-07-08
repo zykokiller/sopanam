@@ -46,11 +46,9 @@
         }
         input[type="text"],
         input[type="date"],
-        select {
-            width: calc(100% - 160px);
-            padding: 5px;
-        }
+        select,
         input[type="file"] {
+            width: calc(100% - 160px);
             padding: 5px;
         }
         button {
@@ -107,15 +105,15 @@
             <input type="text" id="phoneNumber" name="phoneNumber" required>
         </div>
         <div>
-            <label for="photo">Student Photo:</label>
-            <input type="file" id="photo" name="photo" accept="image/*" required>
-        </div>
-        <div>
             <label for="course">Course:</label>
             <select id="course" name="course" required>
                 <option value="Veena">Veena</option>
                 <option value="Music">Music</option>
             </select>
+        </div>
+        <div>
+            <label for="studentPhoto">Student Photo (optional):</label>
+            <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*">
         </div>
         <button type="submit">Add Student</button>
     </form>
@@ -144,34 +142,47 @@
 
         document.getElementById('addStudentForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            try {
-                const photoFile = document.getElementById('photo').files[0];
-                const photoRef = ref(storage, 'studentPhotos/' + photoFile.name);
-                await uploadBytes(photoRef, photoFile);
-                const photoURL = await getDownloadURL(photoRef);
 
-                const newStudent = {
-                    studentName: document.getElementById('studentName').value,
-                    address: document.getElementById('address').value,
-                    batchTime: document.getElementById('batchTime').value,
-                    admissionDate: document.getElementById('admissionDate').value,
-                    whatsappNumber: document.getElementById('whatsappNumber').value,
-                    phoneNumber: document.getElementById('phoneNumber').value,
-                    photoURL: photoURL,
-                    course: document.getElementById('course').value,
-                    paid_month1: false,
-                    paid_month2: false,
-                    paid_month3: false,
-                    paid_month4: false,
-                    paid_month5: false,
-                    paid_month6: false,
-                    paid_month7: false,
-                    paid_month8: false,
-                    paid_month9: false,
-                    paid_month10: false,
-                    paid_month11: false,
-                    paid_month12: false
-                };
+            const studentName = document.getElementById('studentName').value;
+            const address = document.getElementById('address').value;
+            const batchTime = document.getElementById('batchTime').value;
+            const admissionDate = document.getElementById('admissionDate').value;
+            const whatsappNumber = document.getElementById('whatsappNumber').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const course = document.getElementById('course').value;
+            const studentPhoto = document.getElementById('studentPhoto').files[0];
+
+            let photoURL = '';
+            if (studentPhoto) {
+                const storageRef = ref(storage, 'students/' + studentPhoto.name);
+                await uploadBytes(storageRef, studentPhoto);
+                photoURL = await getDownloadURL(storageRef);
+            }
+
+            const newStudent = {
+                studentName,
+                address,
+                batchTime,
+                admissionDate,
+                whatsappNumber,
+                phoneNumber,
+                course,
+                photoURL,
+                paid_month1: false,
+                paid_month2: false,
+                paid_month3: false,
+                paid_month4: false,
+                paid_month5: false,
+                paid_month6: false,
+                paid_month7: false,
+                paid_month8: false,
+                paid_month9: false,
+                paid_month10: false,
+                paid_month11: false,
+                paid_month12: false
+            };
+
+            try {
                 await addDoc(collection(db, 'students'), newStudent);
                 alert('Student added successfully!');
                 this.reset();
