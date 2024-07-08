@@ -32,37 +32,43 @@
         #mainMenu nav ul li a:hover {
             background-color: #555;
         }
-        form {
-            margin-top: 20px;
-            width: 50%;
-            margin: 20px auto;
+        h1 {
+            text-align: center;
+            margin: 20px 0;
         }
-        form div {
-            margin-bottom: 10px;
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
         }
         label {
-            display: inline-block;
-            width: 150px;
+            display: block;
+            margin-bottom: 8px;
         }
         input[type="text"],
         input[type="date"],
-        select,
-        input[type="file"] {
-            width: calc(100% - 160px);
-            padding: 5px;
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
         button {
-            display: block;
             width: 100%;
             padding: 10px;
-            background-color: #333;
-            color: #fff;
+            background-color: #28a745;
+            color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
-            margin-top: 20px;
         }
         button:hover {
-            background-color: #555;
+            background-color: #218838;
         }
     </style>
 </head>
@@ -80,51 +86,41 @@
     </div>
     <h1>Add Students - Sopanam Music School</h1>
     <form id="addStudentForm">
-        <div>
-            <label for="studentName">Student Name:</label>
-            <input type="text" id="studentName" name="studentName" required>
-        </div>
-        <div>
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address" required>
-        </div>
-        <div>
-            <label for="batchTime">Batch Time:</label>
-            <input type="text" id="batchTime" name="batchTime" required>
-        </div>
-        <div>
-            <label for="admissionDate">Date of Admission:</label>
-            <input type="date" id="admissionDate" name="admissionDate" required>
-        </div>
-        <div>
-            <label for="whatsappNumber">WhatsApp Number:</label>
-            <input type="text" id="whatsappNumber" name="whatsappNumber" required>
-        </div>
-        <div>
-            <label for="phoneNumber">Phone Number:</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" required>
-        </div>
-        <div>
-            <label for="course">Course:</label>
-            <select id="course" name="course" required>
-                <option value="Veena">Veena</option>
-                <option value="Music">Music</option>
-            </select>
-        </div>
-        <div>
-            <label for="studentPhoto">Student Photo (optional):</label>
-            <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*">
-        </div>
+        <label for="studentName">Student Name:</label>
+        <input type="text" id="studentName" name="studentName" required>
+
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" required>
+
+        <label for="batchTime">Batch Time:</label>
+        <input type="text" id="batchTime" name="batchTime" required>
+
+        <label for="admissionDate">Date of Admission:</label>
+        <input type="date" id="admissionDate" name="admissionDate" required>
+
+        <label for="whatsappNumber">WhatsApp Number:</label>
+        <input type="text" id="whatsappNumber" name="whatsappNumber" required>
+
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" required>
+
+        <label for="course">Course:</label>
+        <select id="course" name="course" required>
+            <option value="Veena">Veena</option>
+            <option value="Music">Music</option>
+        </select>
+
+        <label for="photo">Student Photo:</label>
+        <input type="file" id="photo" name="photo">
+
         <button type="submit">Add Student</button>
     </form>
 
     <script type="module">
-        // Import Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
 
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBTdroN3i8PB8u8GeMDm_djZaw_lisgJ4M",
             authDomain: "sopanam-fees-site.firebaseapp.com",
@@ -135,13 +131,13 @@
             measurementId: "G-JMR44EQ6M8"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        document.getElementById('addStudentForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        const addStudentForm = document.getElementById('addStudentForm');
+        addStudentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
             const studentName = document.getElementById('studentName').value;
             const address = document.getElementById('address').value;
@@ -150,24 +146,17 @@
             const whatsappNumber = document.getElementById('whatsappNumber').value;
             const phoneNumber = document.getElementById('phoneNumber').value;
             const course = document.getElementById('course').value;
-            const studentPhoto = document.getElementById('studentPhoto').files[0];
+            const photo = document.getElementById('photo').files[0];
 
             let photoURL = '';
-
-            if (studentPhoto) {
-                try {
-                    const storageRef = ref(storage, 'students/' + studentPhoto.name);
-                    console.log('Uploading photo...');
-                    await uploadBytes(storageRef, studentPhoto);
-                    photoURL = await getDownloadURL(storageRef);
-                    console.log('Photo uploaded. URL:', photoURL);
-                } catch (error) {
-                    console.error('Error uploading photo:', error);
-                }
+            if (photo) {
+                const photoRef = ref(storage, `students/${photo.name}`);
+                const snapshot = await uploadBytes(photoRef, photo);
+                photoURL = await getDownloadURL(snapshot.ref);
             }
 
             try {
-                const newStudent = {
+                await addDoc(collection(db, 'students'), {
                     studentName,
                     address,
                     batchTime,
@@ -175,28 +164,13 @@
                     whatsappNumber,
                     phoneNumber,
                     course,
-                    photoURL,
-                    paid_month1: false,
-                    paid_month2: false,
-                    paid_month3: false,
-                    paid_month4: false,
-                    paid_month5: false,
-                    paid_month6: false,
-                    paid_month7: false,
-                    paid_month8: false,
-                    paid_month9: false,
-                    paid_month10: false,
-                    paid_month11: false,
-                    paid_month12: false
-                };
-
-                console.log('Adding student to Firestore...');
-                await addDoc(collection(db, 'students'), newStudent);
-                console.log('Student added successfully!');
+                    photoURL
+                });
                 alert('Student added successfully!');
-                document.getElementById('addStudentForm').reset();
+                addStudentForm.reset();
             } catch (error) {
-                console.error('Error adding student to Firestore:', error);
+                console.error('Error adding student: ', error);
+                alert('Error adding student. Please try again.');
             }
         });
     </script>
