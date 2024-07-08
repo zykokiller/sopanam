@@ -163,62 +163,64 @@
 
             let photoURL = '';
             if (studentPhoto) {
-                const storageRef = ref(storage, 'students/' + studentPhoto.name);
-                const uploadTask = uploadBytesResumable(storageRef, studentPhoto);
+                try {
+                    const storageRef = ref(storage, 'students/' + studentPhoto.name);
+                    const uploadTask = uploadBytesResumable(storageRef, studentPhoto);
 
-                // Monitor the progress of the upload
-                uploadTask.on('state_changed', 
-                    (snapshot) => {
-                        // Get the progress percentage
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        document.getElementById('uploadProgress').style.display = 'block';
-                        document.getElementById('uploadProgress').textContent = 'Uploading: ' + progress.toFixed(2) + '%';
-                    }, 
-                    (error) => {
-                        console.error('Error uploading photo: ', error);
-                    }, 
-                    async () => {
-                        // Upload completed successfully, get the download URL
-                        photoURL = await getDownloadURL(uploadTask.snapshot.ref);
-                        addStudentToFirestore(photoURL);
-                    }
-                );
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            document.getElementById('uploadProgress').style.display = 'block';
+                            document.getElementById('uploadProgress').textContent = 'Uploading: ' + progress.toFixed(2) + '%';
+                        }, 
+                        (error) => {
+                            console.error('Error uploading photo: ', error);
+                        }, 
+                        async () => {
+                            photoURL = await getDownloadURL(uploadTask.snapshot.ref);
+                            addStudentToFirestore(photoURL);
+                        }
+                    );
+                } catch (error) {
+                    console.error('Error during upload process: ', error);
+                }
             } else {
                 addStudentToFirestore(photoURL);
             }
         });
 
         async function addStudentToFirestore(photoURL) {
-            const newStudent = {
-                studentName: document.getElementById('studentName').value,
-                address: document.getElementById('address').value,
-                batchTime: document.getElementById('batchTime').value,
-                admissionDate: document.getElementById('admissionDate').value,
-                whatsappNumber: document.getElementById('whatsappNumber').value,
-                phoneNumber: document.getElementById('phoneNumber').value,
-                course: document.getElementById('course').value,
-                photoURL,
-                paid_month1: false,
-                paid_month2: false,
-                paid_month3: false,
-                paid_month4: false,
-                paid_month5: false,
-                paid_month6: false,
-                paid_month7: false,
-                paid_month8: false,
-                paid_month9: false,
-                paid_month10: false,
-                paid_month11: false,
-                paid_month12: false
-            };
-
             try {
+                const newStudent = {
+                    studentName: document.getElementById('studentName').value,
+                    address: document.getElementById('address').value,
+                    batchTime: document.getElementById('batchTime').value,
+                    admissionDate: document.getElementById('admissionDate').value,
+                    whatsappNumber: document.getElementById('whatsappNumber').value,
+                    phoneNumber: document.getElementById('phoneNumber').value,
+                    course: document.getElementById('course').value,
+                    photoURL,
+                    paid_month1: false,
+                    paid_month2: false,
+                    paid_month3: false,
+                    paid_month4: false,
+                    paid_month5: false,
+                    paid_month6: false,
+                    paid_month7: false,
+                    paid_month8: false,
+                    paid_month9: false,
+                    paid_month10: false,
+                    paid_month11: false,
+                    paid_month12: false
+                };
+
                 await addDoc(collection(db, 'students'), newStudent);
                 alert('Student added successfully!');
                 document.getElementById('uploadProgress').textContent = 'Upload finished!';
                 document.getElementById('addStudentForm').reset();
+                document.getElementById('uploadProgress').style.display = 'none';
             } catch (error) {
-                console.error('Error adding student: ', error);
+                console.error('Error adding student to Firestore: ', error);
             }
         }
     </script>
