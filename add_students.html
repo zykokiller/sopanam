@@ -64,14 +64,6 @@
         button:hover {
             background-color: #555;
         }
-        #uploadProgress {
-            width: 100%;
-            background-color: #f3f3f3;
-            margin-top: 10px;
-            padding: 5px;
-            text-align: center;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -123,7 +115,6 @@
             <label for="studentPhoto">Student Photo (optional):</label>
             <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*">
         </div>
-        <div id="uploadProgress">Uploading: 0%</div>
         <button type="submit">Add Student</button>
     </form>
 
@@ -131,7 +122,7 @@
         // Import Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-firestore.js";
-        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-storage.js";
 
         // Firebase configuration
         const firebaseConfig = {
@@ -164,38 +155,24 @@
             let photoURL = '';
 
             if (studentPhoto) {
-                document.getElementById('uploadProgress').style.display = 'block';
-                const storageRef = ref(storage, 'students/' + studentPhoto.name);
-                const uploadTask = uploadBytesResumable(storageRef, studentPhoto);
-
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        document.getElementById('uploadProgress').textContent = 'Uploading: ' + progress.toFixed(2) + '%';
-                    },
-                    (error) => {
-                        console.error('Error uploading photo: ', error);
-                    },
-                    async () => {
-                        photoURL = await getDownloadURL(uploadTask.snapshot.ref);
-                        addStudentToFirestore(photoURL);
-                    }
-                );
-            } else {
-                addStudentToFirestore(photoURL);
+                try {
+                    const storageRef = ref(storage, 'students/' + studentPhoto.name);
+                    await uploadBytes(storageRef, studentPhoto);
+                    photoURL = await getDownloadURL(storageRef);
+                } catch (error) {
+                    console.error('Error uploading photo: ', error);
+                }
             }
-        });
 
-        async function addStudentToFirestore(photoURL) {
             try {
                 const newStudent = {
-                    studentName: document.getElementById('studentName').value,
-                    address: document.getElementById('address').value,
-                    batchTime: document.getElementById('batchTime').value,
-                    admissionDate: document.getElementById('admissionDate').value,
-                    whatsappNumber: document.getElementById('whatsappNumber').value,
-                    phoneNumber: document.getElementById('phoneNumber').value,
-                    course: document.getElementById('course').value,
+                    studentName,
+                    address,
+                    batchTime,
+                    admissionDate,
+                    whatsappNumber,
+                    phoneNumber,
+                    course,
                     photoURL,
                     paid_month1: false,
                     paid_month2: false,
@@ -213,13 +190,11 @@
 
                 await addDoc(collection(db, 'students'), newStudent);
                 alert('Student added successfully!');
-                document.getElementById('uploadProgress').textContent = 'Upload finished!';
                 document.getElementById('addStudentForm').reset();
-                document.getElementById('uploadProgress').style.display = 'none';
             } catch (error) {
                 console.error('Error adding student to Firestore: ', error);
             }
-        }
+        });
     </script>
 </body>
 </html>
